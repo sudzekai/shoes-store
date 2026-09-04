@@ -1,0 +1,17 @@
+﻿using Domain.ValueObjects.ValueObject;
+using Shared.Types.Exceptions.Validation;
+
+namespace Domain.ValueObjects.Orders
+{
+    public sealed record OrderCode : ValueObject<OrderCode, short>, IValueObject<OrderCode, short>
+    {
+        internal OrderCode(short value) : base(value) { }
+
+        public static OrderCode FromValue(short value)
+        {
+            ValueOutOfRangeException.ThrowIfOutsideRange(value, nameof(OrderCode), 999, 100);
+
+            return new(value);
+        }
+    }
+}
