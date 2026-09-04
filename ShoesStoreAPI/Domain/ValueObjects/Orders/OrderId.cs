@@ -3,10 +3,12 @@ using Shared.Types.Exceptions.Validation;
 
 namespace Domain.ValueObjects.Orders
 {
+    /// <summary>ValueObject для идентификатора заказа.</summary>
     public sealed record OrderId : ValueObject<OrderId, long>, IValueObject<OrderId, long>
     {
         internal OrderId(long value) : base(value) { }
 
+        /// <summary>Создаёт OrderId с проверкой (value >= 0).</summary>
         public static OrderId FromValue(long value)
         {
             ValueOutOfRangeException.ThrowIfLess(value, nameof(OrderId), 0);

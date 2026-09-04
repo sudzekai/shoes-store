@@ -6,8 +6,14 @@ using Domain.ValueObjects.Units;
 
 namespace Domain.Objects.Products
 {
+    /// <summary>
+    /// Частичная реализация сущности товара: создание и восстановление.
+    /// </summary>
     public sealed partial class Product
     {
+        /// <summary>
+        /// Конструктор для создания нового товара (id = 0).
+        /// </summary>
         private Product(CategoryId categoryId, ManufacturerId manufacturerId, UnitId unitId, SupplierId supplierId, ProductArticle article, ProductName name, ProductDescription description, ProductQuantity quantity, ProductDiscountPercent discountPercent, ProductPrice price, ProductPhotoFileName photoFileName)
         {
             Id = new(0);
@@ -24,6 +30,9 @@ namespace Domain.Objects.Products
             PhotoFileName = photoFileName;
         }
 
+        /// <summary>
+        /// Внутренний конструктор для восстановления товара из хранилища.
+        /// </summary>
         private Product(long id, long categoryId, long manufacturerId, long unitId, long supplierId, string article, string name, string description, short quantity, short discountPercent, decimal price, string photoFileName)
         {
             Id = new(id);
@@ -40,9 +49,15 @@ namespace Domain.Objects.Products
             PhotoFileName = new(photoFileName);
         }
 
+        /// <summary>
+        /// Создаёт новый товар.
+        /// </summary>
         public static Product Create(CategoryId categoryId, ManufacturerId manufacturerId, UnitId unitId, SupplierId supplierId, ProductArticle article, ProductName name, ProductDescription description, ProductQuantity quantity, ProductDiscountPercent discountPercent, ProductPrice price, ProductPhotoFileName photoFileName)
             => new(categoryId, manufacturerId, unitId, supplierId, article, name, description, quantity, discountPercent, price, photoFileName);
 
+        /// <summary>
+        /// Восстанавливает товар из хранилища.
+        /// </summary>
         internal static Product Restore(long id, long categoryId, long manufacturerId, long unitId, long supplierId, string article, string name, string description, short quantity, short discountPercent, decimal price, string photoFileName)
             => new(id, categoryId, manufacturerId, unitId, supplierId, article, name, description, quantity, discountPercent, price, photoFileName);
     }

@@ -4,10 +4,12 @@ using System.Text.RegularExpressions;
 
 namespace Domain.ValueObjects.Users
 {
+    /// <summary>ValueObject для логина пользователя (email).</summary>
     public sealed partial record UserLogin : ValueObject<UserLogin, string>, IValueObject<UserLogin, string>
     {
         internal UserLogin(string value) : base(value) { }
 
+        /// <summary>Создаёт UserLogin с валидацией формата email и длины.</summary>
         public static UserLogin FromValue(string value)
         {
             var name = nameof(UserLogin);
@@ -20,8 +22,8 @@ namespace Domain.ValueObjects.Users
         }
 
         /// <summary>
-        /// Регулярное выражение для валидации login как email адреса 
-        /// Соответствует RFC 5322
+        /// Регулярное выражение для валидации login как email адреса.
+        /// Соответствует RFC 5322.
         /// Источник: https://www.regular-expressions.info/email.html
         /// </summary>
         [GeneratedRegex("""
