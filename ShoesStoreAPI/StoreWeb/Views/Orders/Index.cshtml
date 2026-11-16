@@ -1,0 +1,32 @@
+@model List<OrderDto>
+@{
+    ViewData["Title"] = "Заказы";
+}
+@if (Model.Count == 0)
+{
+    <p>Заказов пока нет.</p>
+}
+else
+{
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Номер</th><th>Состав</th><th>Дата заказа</th><th>Итоговая стоимость</th></tr></thead>
+            <tbody>
+                @foreach (var order in Model)
+                {
+                    <tr>
+                        <td>@order.Id</td>
+                        <td>
+                            @foreach (var item in order.Items)
+                            {
+                                <div>@item.Name (@item.Article) × @item.Quantity</div>
+                            }
+                        </td>
+                        <td>@order.CreationDate.ToString("dd.MM.yyyy")</td>
+                        <td>@order.Total.ToString("N2") ₽</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

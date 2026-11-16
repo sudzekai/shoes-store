@@ -1,0 +1,78 @@
+@model CatalogPage
+@{
+    ViewData["Title"] = "Каталог обуви";
+}
+@if (TempData["OrderError"] is string error)
+{
+    <p role="alert">@error</p>
+}
+<form method="get" class="filters">
+    <label>Поиск по описанию <input name="Search" value="@Model.Filter.Search"></label>
+    <label>Производитель
+        <select name="ManufacturerId">
+            <option value="">Все производители</option>
+            @foreach (var manufacturer in Model.Manufacturers)
+            {
+                <option value="@manufacturer.Id" selected="@(Model.Filter.ManufacturerId == manufacturer.Id)">@manufacturer.Name</option>
+            }
+        </select>
+    </label>
+    <label>Цена не выше <input type="number" min="0" step="0.01" name="MaxPrice" value="@Model.Filter.MaxPrice?.ToString(System.Globalization.CultureInfo.InvariantCulture)"></label>
+    <label><input type="checkbox" name="DiscountOnly" value="true" checked="@Model.Filter.DiscountOnly"> Со скидкой</label>
+    <label><input type="checkbox" name="InStockOnly" value="true" checked="@Model.Filter.InStockOnly"> В наличии</label>
+    <label>Сортировка
+        <select name="Sort">
+            <option value="Name" selected="@(Model.Filter.Sort == ProductSort.Name)">По названию</option>
+            <option value="Supplier" selected="@(Model.Filter.Sort == ProductSort.Supplier)">По поставщику</option>
+            <option value="Price" selected="@(Model.Filter.Sort == ProductSort.Price)">Сначала дешевле</option>
+            <option value="PriceDescending" selected="@(Model.Filter.Sort == ProductSort.PriceDescending)">Сначала дороже</option>
+        </select>
+    </label>
+    <button type="submit">Применить</button>
+    <a href="/">Сбросить</a>
+</form>
+@if (Model.Products.Count == 0)
+{
+    <p>Товары не найдены.</p>
+}
+<section class="products" aria-label="Товары">
+    @foreach (var product in Model.Products)
+    {
+        <article class="@(product.DiscountPercent > 15 ? "large-discount" : "")">
+            <img src="/images/@(product.PhotoFileName ?? "picture.png")" alt="@product.Name"
+                 onerror="this.onerror=null;this.src='/images/picture.png'">
+            <div>
+                <h2>@product.Category.Name | @product.Name</h2>
+                <p><strong>Описание товара.</strong> @product.Description</p>
+                <dl>
+                    <dt>Артикул</dt><dd>@product.Article</dd>
+                    <dt>Производитель</dt><dd>@product.Manufacturer.Name</dd>
+                    <dt>Поставщик</dt><dd>@product.Supplier.Name</dd>
+                    <dt>Единица измерения</dt><dd>@product.Unit.Name</dd>
+                    <dt>Количество на складе</dt><dd>@product.Quantity</dd>
+                </dl>
+                <p>
+                    <strong>Цена</strong>
+                    @if (product.DiscountPercent > 0)
+                    {
+                        <del>@product.Price.ToString("N2") ₽</del>
+                    }
+                    <strong>@product.FinalPrice.ToString("N2") ₽</strong>
+                </p>
+                @if (User.IsInRole("Клиент"))
+                {
+                    <form action="/orders" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="productId" value="@product.Id">
+                        <button type="submit">Заказать</button>
+                    </form>
+                }
+                else if (User.Identity?.IsAuthenticated != true)
+                {
+                    <a class="button" href="/account/login">Заказать</a>
+                }
+            </div>
+            <div class="discount"><span>Действующая скидка</span><strong>@product.DiscountPercent%</strong></div>
+        </article>
+    }
+</section>

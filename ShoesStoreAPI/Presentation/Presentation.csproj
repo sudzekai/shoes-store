@@ -1,24 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
+<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>shoes-store-api-local</UserSecretsId>
   </PropertyGroup>
-
   <ItemGroup>
-    <Folder Include="Controllers\" />
-    <Folder Include="DI\" />
+    <ProjectReference Include="../StoreData/StoreData.csproj" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.15" />
   </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Sudzekai.AspNetCore.Toolkit.Logging" Version="1.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Application\Application.csproj" />
-    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
-    <ProjectReference Include="..\Shared\Shared.csproj" />
-  </ItemGroup>
-
 </Project>
